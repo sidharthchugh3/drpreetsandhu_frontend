@@ -1,8 +1,8 @@
-import React from "react";
-import HomeHero from "../components/homepage/HomeHero";
+import React from 'react';
+import HomeHero from '../components/homepage/HomeHero';
 
 const Homepage = () => {
-  return <HomeHero />;
+    return <HomeHero />;
 };
 
 export default Homepage;
