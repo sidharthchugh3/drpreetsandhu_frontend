@@ -3,7 +3,9 @@ import StatsBar from '../components/home/StatsBar';
 import About from '../components/home/About';
 import Milestones from '../components/home/Milestones';
 import Ventures from '../components/home/Ventures';
-import ContactForm from '../components/home/ContactForm';
+import NewsMedia  from '../components/home/NewsMedia';
+import ReachOut from '../components/home/ReachOut';
+
 
 export default function Home() {
     return (
@@ -13,7 +15,8 @@ export default function Home() {
             <About />
             <Milestones />
             <Ventures />
-            <ContactForm />
+            <NewsMedia/>
+            <ReachOut />
         </main>
     );
 }

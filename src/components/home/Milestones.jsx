@@ -2,136 +2,106 @@ const milestones = [
     {
         id: 'avpl',
         number: '01',
-        icon: 'fa-solid fa-drone',
-        iconFallback: 'fa-solid fa-plane-departure',
         title: 'Building AVPL International',
         subtitle: '(a.k.a. Impact, Unleashed)',
-        description:
-            'Founded AVPL International — a drone technology company transforming agriculture, surveillance, and delivery across India. From a bold idea to a nationally recognised enterprise.',
-        color: '#262897',
+        description: 'Back in 2016, I took a wild leap and started AVPL International with a simple purpose: empower people—not just with inspiration, but with actual skills, knowledge, and tech that opens new doors. Fast forward, and we’ve trained more than 130,000 students (big families have nothing on us). Next up? Turning 1,50,000 dreamers into Village Level Entrepreneurs and shaking up lives in 12 states. Rural India, get ready: this is just the beginning.',
+        column: 1
     },
     {
         id: 'startup-stairs',
         number: '02',
-        icon: 'fa-solid fa-stairs',
-        iconFallback: 'fa-solid fa-stairs',
-        title: 'Launching Startup Stairs',
-        subtitle: '(Where Dreams Take Off)',
-        description:
-            'A platform for early-stage entrepreneurs to get mentoring, funding connections, and community. 10+ startups funded. 50+ ideas mentored to life.',
-        color: '#4a4cc7',
+        title: 'Startup Stairs',
+        subtitle: 'My Favorite Launchpad',
+        description: 'Startup Stairs is my playground for wild ideas, entrepreneurial energy, and occasional happy chaos. Helping early-stage startups in drones, agri-tech, AI, robotics, and EVs take off? That’s my kind of fun. There’s nothing better than cheering on visionaries as they turn wild “what ifs” into “look what we did!”',
+        column: 2
     },
     {
         id: 'awards',
         number: '03',
-        icon: 'fa-solid fa-trophy',
-        iconFallback: 'fa-solid fa-trophy',
-        title: 'Women Leadership Awards',
-        subtitle: '(Recognised, Celebrated)',
-        description:
-            'Recipient of multiple women entrepreneurship and leadership awards, recognising impact in technology, education, and community development.',
-        color: '#6366f1',
+        title: 'Breaking A Few Glass Ceilings',
+        subtitle: '(And Maybe A Drone Propeller Or Two)',
+        description: 'I’m extra-proud to be the first woman entrepreneur collaborating with legends like IIT Kanpur, HSDM, and NSDC International. It means our mission for innovation is getting louder, prouder, and more people are joining the party.',
+        column: 1
     },
     {
         id: 'music',
         number: '04',
-        icon: 'fa-solid fa-music',
-        iconFallback: 'fa-solid fa-music',
-        title: 'Spiritual Music Creator',
-        subtitle: '(Healing through Sound)',
-        description:
-            'Beyond technology, creating soulful spiritual music that bridges innovation and inner harmony — uplifting minds and inspiring hearts.',
-        color: '#7c3aed',
+        title: 'Rural Roots & Rocket Science',
+        subtitle: '',
+        description: 'No matter how high we fly, rural development keeps me grounded. Whether it’s through projects like WISH and GISH or getting drones buzzing over farms, we’re not just improving yields—we’re sparking new dreams for the next generation.',
+        column: 2
     },
 ];
 
 export default function Milestones() {
+    const brandBlue = '#262897';
+    const bodyGray = '#6a6874';
+
     return (
-        <section
-            id="milestones"
-            className="section-py"
-            style={{ background: '#f8f9ff' }}
-        >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section header */}
-                <div className="text-center mb-14">
-                    <span
-                        className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase mb-4"
-                        style={{
-                            background: 'rgba(38,40,151,0.08)',
-                            color: '#262897',
-                        }}
-                    >
-                        Achievements
-                    </span>
-                    <h2
-                        className="text-3xl sm:text-4xl font-bold text-[#150d43] mb-4"
-                        style={{ fontFamily: 'Jost, sans-serif' }}
-                    >
-                        Feathers in My Cap: Milestones &amp; Meaningful Impact
+        <section id="milestones" className="py-24 bg-white overflow-hidden">
+            <div className="max-w-[1140px] mx-auto px-6">
+                
+                {/* Section Header */}
+                <div className="text-center mb-16 lg:mb-20">
+                    <h2 className="text-3xl md:text-[42px] font-[1000] mb-6 tracking-tight leading-tight" 
+                        style={{ color: brandBlue, fontFamily: '"Jost", sans-serif' }}>
+                        Feathers In My Cap: Milestones & Meaningful Impact
                     </h2>
-                    <p className="text-[#6a6874] max-w-2xl mx-auto leading-relaxed">
-                        If I had a trophy shelf (and it was big enough), here's
-                        what you'd find — every milestone a story, every
-                        achievement proof that with a bit of courage, you can
-                        spark real change.
+                    <p className="max-w-[800px] mx-auto text-[16px] lg:text-[17px] leading-[1.8] font-medium"
+                       style={{ color: bodyGray, fontFamily: '"Jost", sans-serif' }}>
+                        If I had a trophy shelf (and it was big enough), here’s what you’d find—every milestone a story, every achievement proof that with a bit of courage, you can spark real change.
                     </p>
                 </div>
 
-                {/* Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {milestones.map((m) => (
-                        <article
-                            key={m.id}
-                            id={`milestone-${m.id}`}
-                            className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
-                        >
-                            {/* Accent top bar */}
-                            <div
-                                className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl"
-                                style={{
-                                    background: `linear-gradient(90deg, ${m.color}, ${m.color}88)`,
-                                }}
-                            />
+                {/* Asymmetric Masonry-Style Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                    
+                    {/* Left Column (Cards 01 and 03) */}
+                    <div className="flex flex-col gap-8">
+                        {milestones.filter(m => m.column === 1).map((m) => (
+                            <MilestoneCard key={m.id} m={m} />
+                        ))}
+                    </div>
 
-                            {/* Number */}
-                            <span
-                                className="absolute top-4 right-4 text-5xl font-bold opacity-[0.06]"
-                                style={{
-                                    fontFamily: 'Jost, sans-serif',
-                                    color: m.color,
-                                }}
-                            >
-                                {m.number}
-                            </span>
+                    {/* Right Column (Cards 02 and 04) - Staggered down on desktop */}
+                    <div className="flex flex-col gap-8 md:mt-16">
+                        {milestones.filter(m => m.column === 2).map((m) => (
+                            <MilestoneCard key={m.id} m={m} />
+                        ))}
+                    </div>
 
-                            {/* Icon */}
-                            <div
-                                className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
-                                style={{ background: `${m.color}15` }}
-                            >
-                                <i
-                                    className={`${m.icon || m.iconFallback} text-xl`}
-                                    style={{ color: m.color }}
-                                />
-                            </div>
-
-                            <h3
-                                className="text-base font-bold text-[#150d43] mb-1"
-                                style={{ fontFamily: 'Jost, sans-serif' }}
-                            >
-                                {m.title}
-                            </h3>
-                            <p className="text-xs text-[#262897] font-medium mb-3 italic">
-                                {m.subtitle}
-                            </p>
-                            <p className="text-sm text-[#6a6874] leading-relaxed">
-                                {m.description}
-                            </p>
-                        </article>
-                    ))}
                 </div>
             </div>
         </section>
+    );
+}
+
+function MilestoneCard({ m }) {
+    const brandBlue = '#262897';
+    const headingColor = '#150d43';
+    const bodyGray = '#6a6874';
+
+    return (
+        <article
+            className="p-8 lg:p-12 rounded-[15px] bg-[#f1f5f6] transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 group"
+        >
+            <div className="mb-6 pb-6 border-b border-white/60">
+                <h3 className="text-[22px] lg:text-2xl font-bold mb-3 tracking-tight leading-tight" 
+                    style={{ color: brandBlue, fontFamily: '"Jost", sans-serif' }}>
+                    {m.title}
+                </h3>
+                {m.subtitle && (
+                    <h4 className="text-[13px] font-bold uppercase tracking-widest opacity-60"
+                        style={{ color: headingColor, fontFamily: '"Jost", sans-serif' }}>
+                        {m.subtitle}
+                    </h4>
+                )}
+            </div>
+            
+            <p className="text-[15px] lg:text-[16px] leading-[1.9] text-justify font-normal"
+               style={{ color: bodyGray, fontFamily: '"Jost", sans-serif' }}>
+                {m.description}
+            </p>
+        </article>
     );
 }

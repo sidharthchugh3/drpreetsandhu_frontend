@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { navigation, ctaLink } from '../data/navigation';
 
@@ -7,190 +7,142 @@ export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-    const menuRef = useRef(null);
 
-    /* ── Scroll shadow ── */
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 50);
+        const onScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
-    /* ── Close menu on outside click ── */
-    useEffect(() => {
-        const handler = (e) => {
-            if (
-                menuOpen &&
-                menuRef.current &&
-                !menuRef.current.contains(e.target)
-            ) {
-                setMenuOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
-    }, [menuOpen]);
-
-    /* ── Close menu on route change ── */
-    useEffect(() => {
-        setMenuOpen(false);
-    }, [location.pathname]);
-
-    /* ── Handle nav link click ── */
     const handleNavClick = (e, item) => {
-        if (item.type === 'anchor') {
+        const isAbout = item.label.toLowerCase() === 'about';
+        const targetId = isAbout ? 'milestones' : item.href.split('#')[1];
+
+        if (item.type === 'anchor' || isAbout) {
             e.preventDefault();
-            setMenuOpen(false);
-            const hash = item.href.split('#')[1];
             if (location.pathname === '/') {
-                document
-                    .getElementById(hash)
-                    ?.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
             } else {
                 navigate('/');
                 setTimeout(() => {
-                    document
-                        .getElementById(hash)
-                        ?.scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
                 }, 350);
             }
-        } else {
-            setMenuOpen(false);
         }
-    };
-
-    const isActive = (item) => {
-        if (item.type === 'anchor') return false;
-        return location.pathname === item.href;
+        setMenuOpen(false);
     };
 
     return (
-        <header
-            id="site-header"
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-                scrolled
-                    ? 'bg-white shadow-lg py-2'
-                    : 'bg-white/95 backdrop-blur-sm py-3'
-            }`}
-        >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    {/* Logo */}
-                    <Link to="/" id="navbar-logo" className="flex-shrink-0">
-                        <img
-                            src="/assets/images/logo.png"
-                            alt="Dr. Preet Sandhu"
-                            className="h-12 w-auto object-contain"
-                        />
-                    </Link>
-
-                    {/* Desktop nav */}
-                    <nav
-                        id="desktop-nav"
-                        className="hidden lg:flex items-center gap-6"
-                    >
-                        {navigation.map((item) =>
-                            item.type === 'route' ? (
-                                <Link
-                                    key={item.href}
-                                    to={item.href}
-                                    id={`nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
-                                    className={`font-medium text-sm transition-colors duration-200 hover:text-brand-primary relative group ${
-                                        isActive(item)
-                                            ? 'text-brand-primary'
-                                            : 'text-brand-dark'
-                                    }`}
-                                >
-                                    {item.label}
-                                    <span
-                                        className={`absolute -bottom-1 left-0 h-0.5 bg-brand-primary transition-all duration-200 ${isActive(item) ? 'w-full' : 'w-0 group-hover:w-full'}`}
-                                    />
-                                </Link>
-                            ) : (
-                                <a
-                                    key={item.href}
-                                    href={item.href}
-                                    id={`nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
-                                    onClick={(e) => handleNavClick(e, item)}
-                                    className="font-medium text-sm text-[#150d43] transition-colors duration-200 hover:text-[#262897] relative group"
-                                >
-                                    {item.label}
-                                    <span className="absolute -bottom-1 left-0 h-0.5 bg-[#262897] w-0 group-hover:w-full transition-all duration-200" />
-                                </a>
-                            ),
-                        )}
-                        <Link
-                            to={ctaLink.href}
-                            id="nav-lets-connect"
-                            className="ml-2 px-5 py-2 rounded-full border-2 border-[#262897] text-[#262897] font-semibold text-sm hover:bg-[#262897] hover:text-white transition-all duration-200"
-                        >
-                            {ctaLink.label}
-                        </Link>
-                    </nav>
-
-                    {/* Mobile hamburger */}
-                    <button
-                        id="mobile-menu-toggle"
-                        onClick={() => setMenuOpen((o) => !o)}
-                        aria-label="Toggle menu"
-                        aria-expanded={menuOpen}
-                        className="lg:hidden flex flex-col gap-1.5 p-2 rounded"
-                    >
-                        <span
-                            className={`block w-6 h-0.5 bg-[#150d43] transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}
-                        />
-                        <span
-                            className={`block w-6 h-0.5 bg-[#150d43] transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`}
-                        />
-                        <span
-                            className={`block w-6 h-0.5 bg-[#150d43] transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}
-                        />
-                    </button>
-                </div>
-            </div>
-
-            {/* Mobile drawer */}
-            <div
-                ref={menuRef}
-                id="mobile-menu"
-                className={`lg:hidden overflow-hidden transition-all duration-300 ${menuOpen ? 'max-h-screen' : 'max-h-0'}`}
+        <>
+            <header
+                id="masthead"
+                className={`fixed top-0 left-0 w-full z-[999] bg-white transition-all duration-300 ${
+                    scrolled ? 'shadow-[0_2px_12px_rgba(0,0,0,0.06)]' : 'border-b border-[#f3f3f3]'
+                }`}
+                style={{ fontFamily: '"Jost", sans-serif' }}
             >
-                <nav className="bg-white border-t border-gray-100 px-4 py-4 flex flex-col gap-2">
-                    {navigation.map((item) =>
-                        item.type === 'route' ? (
-                            <Link
-                                key={item.href}
-                                to={item.href}
-                                id={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
-                                className={`py-2.5 px-3 rounded-lg font-medium text-sm transition-colors ${
-                                    isActive(item)
-                                        ? 'bg-[#262897]/10 text-[#262897]'
-                                        : 'text-[#150d43] hover:bg-gray-50'
-                                }`}
-                            >
-                                {item.label}
+                <div className="w-full max-w-[1140px] mx-auto px-[15px]">
+                    <div className="flex items-center justify-between h-[84px]">
+                        <div className="flex-shrink-0">
+                            <Link to="/" className="block">
+                                <img
+                                    src="https://drpreetsandhu.com/wp-content/uploads/2025/07/cropped-Preet-Maam-3.png"
+                                    alt="Dr Preet Sandhu"
+                                    className="h-[64px] w-auto object-contain"
+                                />
                             </Link>
-                        ) : (
-                            <a
-                                key={item.href}
-                                href={item.href}
-                                id={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
-                                onClick={(e) => handleNavClick(e, item)}
-                                className="py-2.5 px-3 rounded-lg font-medium text-sm text-[#150d43] hover:bg-gray-50"
+                        </div>
+
+                        <div className="flex items-center">
+                            <nav className="hidden lg:block">
+                                <ul className="flex items-center gap-[36px] m-0 p-0 list-none">
+                                    {navigation.map((item) => (
+                                        <li key={item.label}>
+                                            <Link
+                                                to={item.href}
+                                                onClick={(e) => handleNavClick(e, item)}
+                                                style={{
+                                                    color: location.pathname === item.href ? '#262897' : '#150d43',
+                                                    fontFamily: 'Jost, sans-serif',
+                                                }}
+                                                className="relative text-[16.5px] font-[600] leading-none transition-colors duration-300 hover:text-[#262897]"
+                                            >
+                                                {item.label}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </nav>
+
+                            <div className="hidden lg:block ml-[36px]">
+                                <Link
+                                    to={ctaLink.href}
+                                    className="inline-flex items-center justify-center px-[34px] h-[48px] rounded-[5px] text-[17.5px] font-[600] leading-none transition-all duration-300 hover:bg-[#262897] hover:!text-white"
+                                    style={{ 
+                                        fontFamily: 'Jost, sans-serif',
+                                        color: '#262897',
+                                        borderColor: '#262897',
+                                        borderWidth: '1.5px',
+                                        borderStyle: 'solid'
+                                    }}
+                                >
+                                    {ctaLink.label}
+                                </Link>
+                            </div>
+
+                            <button
+                                onClick={() => setMenuOpen(!menuOpen)}
+                                className="lg:hidden ml-5 text-[#262897]"
                             >
-                                {item.label}
-                            </a>
-                        ),
-                    )}
+                                <span className="text-2xl font-bold">☰</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div
+                className={`fixed top-0 right-0 h-full w-[300px] bg-white z-[1001] transform transition-transform duration-300 lg:hidden shadow-[-4px_0_20px_rgba(0,0,0,0.08)] ${
+                    menuOpen ? 'translate-x-0' : 'translate-x-full'
+                }`}
+            >
+                <div className="flex justify-end p-5">
+                    <button onClick={() => setMenuOpen(false)} className="text-[#262897] text-3xl">×</button>
+                </div>
+
+                <div className="flex flex-col px-8 pt-4">
+                    {navigation.map((item) => (
+                        <Link
+                            key={item.label}
+                            to={item.href}
+                            onClick={(e) => handleNavClick(e, item)}
+                            className="py-4 border-b border-b-[#f3f3f3] text-[17px] font-[600] text-[#150d43]"
+                            style={{ fontFamily: 'Jost, sans-serif' }}
+                        >
+                            {item.label}
+                        </Link>
+                    ))}
+
                     <Link
                         to={ctaLink.href}
-                        id="mobile-nav-lets-connect"
-                        className="mt-2 py-2.5 px-3 rounded-full bg-[#262897] text-white font-semibold text-sm text-center"
+                        onClick={() => setMenuOpen(false)}
+                        className="mt-8 inline-flex items-center justify-center h-[48px] rounded-[5px] text-[17.5px] font-[600] transition-all duration-300 hover:bg-[#262897] hover:!text-white"
+                        style={{ 
+                            fontFamily: 'Jost, sans-serif',
+                            color: '#262897',
+                            borderColor: '#262897',
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid'
+                        }}
                     >
                         {ctaLink.label}
                     </Link>
-                </nav>
+                </div>
             </div>
-        </header>
+
+            {menuOpen && (
+                <div onClick={() => setMenuOpen(false)} className="fixed inset-0 bg-black/30 z-[1000] lg:hidden" />
+            )}
+        </>
     );
 }

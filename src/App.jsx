@@ -8,7 +8,6 @@ import Gallery from './pages/Gallery';
 import Blogs from './pages/Blogs';
 import Connect from './pages/Connect';
 
-/* ── Scroll to top on route change ── */
 function ScrollToTop() {
     const { pathname } = useLocation();
     useEffect(() => {
@@ -17,18 +16,20 @@ function ScrollToTop() {
     return null;
 }
 
-/* ── 404 page ── */
+function PageTransitionWrapper({ children }) {
+    const { pathname } = useLocation();
+    return (
+        <div key={pathname} className="animate-fade-in-up min-h-screen">
+            {children}
+        </div>
+    );
+}
+
 function NotFound() {
     return (
-        <main
-            className="min-h-screen flex items-center justify-center pt-24"
-            id="main-404"
-        >
+        <main className="min-h-screen flex items-center justify-center pt-24" id="main-404">
             <div className="text-center px-4">
-                <p
-                    className="text-8xl font-bold text-[#262897]/20"
-                    style={{ fontFamily: 'Jost, sans-serif' }}
-                >
+                <p className="text-8xl font-bold text-[#262897]/20" style={{ fontFamily: 'Jost, sans-serif' }}>
                     404
                 </p>
                 <h1 className="text-3xl font-bold text-[#150d43] mt-4 mb-3">
@@ -40,10 +41,7 @@ function NotFound() {
                 <a
                     href="/"
                     className="px-7 py-3 rounded-full font-semibold text-sm text-white inline-block"
-                    style={{
-                        background:
-                            'linear-gradient(135deg, #262897 0%, #4a4cc7 100%)',
-                    }}
+                    style={{ background: 'linear-gradient(135deg, #262897 0%, #4a4cc7 100%)' }}
                 >
                     Back to Home
                 </a>
@@ -58,11 +56,12 @@ export default function App() {
             <ScrollToTop />
             <Navbar />
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/my-family" element={<MyFamily />} />
-                <Route path="/gallery" element={<Gallery />} />
-                <Route path="/blogs" element={<Blogs />} />
-                <Route path="/connect" element={<Connect />} />
+                <Route path="/" element={<PageTransitionWrapper><Home /></PageTransitionWrapper>} />
+                <Route path="/my-family" element={<PageTransitionWrapper><MyFamily /></PageTransitionWrapper>} />
+                <Route path="/gallery" element={<PageTransitionWrapper><Gallery /></PageTransitionWrapper>} />
+                <Route path="/blogs" element={<PageTransitionWrapper><Blogs /></PageTransitionWrapper>} />
+                <Route path="/blogs/page/:pageNumber" element={<PageTransitionWrapper><Blogs /></PageTransitionWrapper>} />
+                <Route path="/connect" element={<PageTransitionWrapper><Connect /></PageTransitionWrapper>} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
